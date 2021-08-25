@@ -1,10 +1,10 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import Welcome from "../screen/Welcome";
 import createAccount from "../screen/createAccount";
 import Login from "../screen/Login";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export default function LoggedOutNav() {
   return (

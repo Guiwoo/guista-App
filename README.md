@@ -6,9 +6,10 @@
 
 [] Make Error components
 [] Prop Types
-[] Fix Button
 
 # 1
+
+# https://reactnative.directory/?search=storage
 
 - App Loading : expo install expo-app-loading
 - Font : expo install expo-font
@@ -31,3 +32,12 @@
 - when you press next move to next input (https://docs.expo.dev/versions/latest/react-native/textinput/#props) "Text Input things"
 - How to move your screen depends on keyboard ? KeyboardAvoidingView(https://docs.expo.dev/versions/latest/react-native/keyboardavoidingview/#contentcontainerstyle)
   -remove keyboard if user touch empty screen => touchableOpacity without Feedback
+
+# 4
+
+- React hook form can use on Native, how to transfer data ? using navigation.navigate props
+
+# 5
+
+- what is diffierent expo i and npm i ? expo i called npm i
+- it maek sure this pacage work on current expo version

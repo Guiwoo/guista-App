@@ -1,19 +1,60 @@
+import { useMutation } from "@apollo/client";
+import gql from "graphql-tag";
 import React, { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AuthShared";
 
-export default function createAccount() {
-  const { control, handleSubmit } = useForm({
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation createAccount(
+    $firstName: String!
+    $lastName: String
+    $userName: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      lastName: $lastName
+      userName: $userName
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`;
+
+export default function createAccount({ navigation }) {
+  const { control, handleSubmit, formState, getValues } = useForm({
     defaultValues: {
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      username: "",
+      userName: "",
       password: "",
     },
   });
+  const onCompleted = (data) => {
+    const {
+      createAccount: { ok },
+    } = data;
+    const { userName, password } = getValues();
+    if (ok) {
+      navigation.navigate("login", {
+        userName,
+        password,
+      });
+    }
+  };
+  const [createAccountMutation, { loading }] = useMutation(
+    CREATE_ACCOUNT_MUTATION,
+    {
+      onCompleted,
+    }
+  );
   const lastNameRef = useRef();
   const userNameRef = useRef();
   const emailRef = useRef();
@@ -23,7 +64,13 @@ export default function createAccount() {
     nextOne?.current?.focus();
   };
   const onValid = (data) => {
-    console.log(data);
+    if (!loading) {
+      createAccountMutation({
+        variables: {
+          ...data,
+        },
+      });
+    }
   };
   const onChange = (arg) => {
     return {
@@ -47,7 +94,7 @@ export default function createAccount() {
             value={value}
           />
         )}
-        name="firstname"
+        name="firstName"
         rules={{ required: true }}
       />
       <Controller
@@ -66,7 +113,7 @@ export default function createAccount() {
             value={value}
           />
         )}
-        name="lastname"
+        name="lastName"
         rules={{ required: true }}
       />
       <Controller
@@ -85,7 +132,7 @@ export default function createAccount() {
             value={value}
           />
         )}
-        name="username"
+        name="userName"
         rules={{ required: true }}
       />
       <Controller

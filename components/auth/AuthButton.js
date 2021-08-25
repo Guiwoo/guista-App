@@ -9,7 +9,7 @@ const Button = styled.TouchableOpacity`
   padding: 15px 10px;
   border-radius: 4px;
   width: 100%;
-  opacity: ${(props) => (props.disalbed ? "0.5 " : "1")};
+  opacity: ${(props) => (props.disabled ? "0.5 " : "1")};
 `;
 
 const ButtonText = styled.Text`
@@ -19,9 +19,9 @@ const ButtonText = styled.Text`
   text-align: center;
 `;
 
-export default ({ onPress, disalbed, text, loading }) => {
+export default ({ onPress, disabled, text, loading }) => {
   return (
-    <Button disalbed={disalbed} onPress={onPress}>
+    <Button disabled={disabled} onPress={onPress}>
       {loading ? (
         <ActivityIndicator color="white" />
       ) : (
