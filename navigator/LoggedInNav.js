@@ -19,7 +19,7 @@ export default () => {
       }}
     >
       <Tab.Screen
-        name="Feed"
+        name="TabFeed"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIconCompo color={color} iconName={"home"} focused={focused} />
@@ -29,7 +29,7 @@ export default () => {
         {() => <SharedStackNav screenName="Feed" />}
       </Tab.Screen>
       <Tab.Screen
-        name="Search"
+        name="TabSearch"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIconCompo color={color} iconName={"search"} focused={focused} />
@@ -39,7 +39,7 @@ export default () => {
         {() => <SharedStackNav screenName="Search" />}
       </Tab.Screen>
       <Tab.Screen
-        name="Camera"
+        name="TabCamera"
         component={View}
         options={{
           tabBarIcon: ({ color, focused }) => (
@@ -48,7 +48,7 @@ export default () => {
         }}
       />
       <Tab.Screen
-        name="Notification"
+        name="TabNotification"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIconCompo color={color} iconName={"heart"} focused={focused} />
@@ -58,7 +58,7 @@ export default () => {
         {() => <SharedStackNav screenName="Notification" />}
       </Tab.Screen>
       <Tab.Screen
-        name="Me"
+        name="TabMe"
         options={{
           tabBarIcon: ({ color, focused }) => (
             <TabIconCompo color={color} iconName={"person"} focused={focused} />

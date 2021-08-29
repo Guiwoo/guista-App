@@ -29,7 +29,7 @@ export default ({ screenName }) => {
           options={{
             headerTitle: () => (
               <Image
-                style={{ maxHeight: 50, maxWidth: 300 }}
+                style={{ maxHeight: 40, maxWidth: 300 }}
                 resizeMode="contain"
                 source={require("../assets/fontLogo.png")}
               />

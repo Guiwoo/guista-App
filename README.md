@@ -41,3 +41,8 @@
 
 - what is diffierent expo i and npm i ? expo i called npm i
 - it maek sure this pacage work on current expo version
+
+# 6
+
+- ScrollView vs FlatList it depends on amount of data
+- Photo Components ,How to dissapear the scroll var
