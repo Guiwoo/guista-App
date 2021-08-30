@@ -1,5 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { logUserOut } from "../apollo";
 
 export default () => (
   <View
@@ -11,5 +13,8 @@ export default () => (
     }}
   >
     <Text style={{ color: "white" }}>Me</Text>
+    <TouchableOpacity onPress={logUserOut}>
+      <Text style={{ color: "white" }}>Log out</Text>
+    </TouchableOpacity>
   </View>
 );

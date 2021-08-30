@@ -46,3 +46,22 @@
 
 - ScrollView vs FlatList it depends on amount of data
 - Photo Components ,How to dissapear the scroll var
+
+# 7
+
+- Infinity Scroll,
+
+1. need to set a offset on your query
+2. onEndReachedThreshold : set the end point by number start 0 to etc..
+3. onEndReached : when i reached bottom start a fucntion
+4. Set apollo : How to handle those refetching data ?
+
+- typePolicies, query or etc..
+- keyargs: false ? => we want apollo does not care the args
+  #4-1
+  -merge those data
+  ex)merge(exsiting=[],incoming=[]) => return (...exsiting,...incoming)
+- offSetLimitPagination or cna use this function
+- Pull Refreshing
+
+1. refreshing, onRefresh use those options on FlatScreen

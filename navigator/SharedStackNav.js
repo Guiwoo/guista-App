@@ -7,6 +7,8 @@ import Me from "../screen/Me";
 import Profile from "../screen/Profile";
 import Photo from "../screen/Photo";
 import { Image } from "react-native";
+import Likes from "../screen/Likes";
+import Comments from "../screen/Comments";
 
 const Stack = createStackNavigator();
 
@@ -46,6 +48,8 @@ export default ({ screenName }) => {
       {screenName === "Me" ? <Stack.Screen name="Me" component={Me} /> : null}
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Photo" component={Photo} />
+      <Stack.Screen name="Likes" component={Likes} />
+      <Stack.Screen name="Comments" component={Comments} />
     </Stack.Navigator>
   );
 };
