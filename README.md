@@ -64,4 +64,14 @@
 - offSetLimitPagination or cna use this function
 - Pull Refreshing
 
-1. refreshing, onRefresh use those options on FlatScreen
+- refreshing, onRefresh use those options on FlatScreen
+
+# 8
+
+- How to run without wifi cache persist
+
+# 9
+
+- Make a Fragment , using navigate params (https://reactnavigation.org/docs/route-prop/)
+  -Flatlist etc..
+  -Seperator

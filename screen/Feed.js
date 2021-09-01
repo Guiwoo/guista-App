@@ -1,7 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { FlatList } from "react-native";
 import Photo from "../components/Photo";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
@@ -11,6 +10,7 @@ const FEED_QUERY = gql`
     seeFeed(offSet: $offSet) {
       ...PhotoFragment
       user {
+        id
         userName
         avatar
       }

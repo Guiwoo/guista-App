@@ -1,11 +1,14 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import TabIconCompo from "../components/nav/TabIconCompo";
 import SharedStackNav from "./SharedStackNav";
+import useMe from "../hooks/useMe";
 
 const Tab = createBottomTabNavigator();
 export default () => {
+  const { data } = useMe();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -60,9 +63,24 @@ export default () => {
       <Tab.Screen
         name="TabMe"
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIconCompo color={color} iconName={"person"} focused={focused} />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            data?.me?.avatar ? (
+              <Image
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 15,
+                  ...(focused && { borderColor: "white", borderWidth: 1 }),
+                }}
+                source={{ uri: data.me.avatar }}
+              />
+            ) : (
+              <TabIconCompo
+                color={color}
+                iconName={"person"}
+                focused={focused}
+              />
+            ),
         }}
       >
         {() => <SharedStackNav screenName="Me" />}
