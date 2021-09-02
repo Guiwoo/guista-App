@@ -1,8 +1,14 @@
-import { useLazyQuery } from "@apollo/client";
-import gql from "graphql-tag";
+import { gql, useLazyQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import styled from "styled-components/native";
 import DissmissKeyboard from "../components/DissmissKeyboard";
 
@@ -26,13 +32,20 @@ const MessageText = styled.Text`
   margin-top: 10px;
 `;
 
-const Input = styled.TextInput``;
+const Input = styled.TextInput`
+  background-color: rgba(255, 255, 255, 0.7);
+  color: black;
+  width: ${(props) => props.width / 1.7}px;
+  padding: 5px 10px;
+  border-radius: 10px;
+`;
 
 export default ({ navigation }) => {
+  const { width } = useWindowDimensions();
   const { setValue, register, watch, handleSubmit } = useForm();
   const [startQUeryfn, { loading, data, called }] = useLazyQuery(SEARCH_PHOTO);
-  const onSubmit = () => {};
   const onValid = ({ keyword }) => {
+    console.log(keyword);
     startQUeryfn({
       variables: {
         keyword,
@@ -40,10 +53,10 @@ export default ({ navigation }) => {
     });
   };
   const SearchBox = () => (
-    <TextInput
-      style={{ backgroundColor: "white" }}
+    <Input
+      width={width}
       placeholder="Search photos..."
-      placeholderTextColor="black"
+      placeholderTextColor="rgba(0,0,0,0.8)"
       autoCapitalize="none"
       returnKeyLabel="Search"
       returnKeyType="search"
@@ -61,6 +74,20 @@ export default ({ navigation }) => {
       minLength: 3,
     });
   }, []);
+  const renderSearch = ({ item: photo }) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("PhotoScreen", {
+          photoId: photo.id,
+        })
+      }
+    >
+      <Image
+        style={{ width: width / 3, height: 100 }}
+        source={{ uri: photo.file }}
+      />
+    </TouchableOpacity>
+  );
   return (
     <DissmissKeyboard>
       <View style={{ flex: 1, backgroundColor: "black" }}>
@@ -75,12 +102,22 @@ export default ({ navigation }) => {
             <MessageText>Searching by Keyword</MessageText>
           </MessageContainer>
         ) : null}
-        {data?.searchPhotos !== undefined && data?.searchPhotos.length === 0 ? (
-          <MessageContainer>
-            <MessageText>Could not find anything..!</MessageText>
-          </MessageContainer>
+        {data?.searchPhotos !== undefined ? (
+          data?.searchPhotos.length === 0 ? (
+            <MessageContainer>
+              <MessageText>Could not find anything..!</MessageText>
+            </MessageContainer>
+          ) : (
+            <FlatList
+              numColumns={3}
+              data={data?.searchPhotos}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderSearch}
+            />
+          )
         ) : null}
       </View>
     </DissmissKeyboard>
   );
 };
+// if i click photo i will go to photo screen

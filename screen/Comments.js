@@ -13,3 +13,5 @@ export default () => (
     <Text style={{ color: "white" }}>Comments</Text>
   </View>
 );
+
+//challenge dismisskeyboard , faltlist pulltorefresh
