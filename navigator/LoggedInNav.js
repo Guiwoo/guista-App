@@ -1,90 +1,21 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, View } from "react-native";
-import TabIconCompo from "../components/nav/TabIconCompo";
-import SharedStackNav from "./SharedStackNav";
-import useMe from "../hooks/useMe";
+import { createStackNavigator } from "@react-navigation/stack";
+import TabsNav from "./TabsNav";
+import Upload from "../screen/SelectPhoto";
+import UploadNav from "./UploadNav";
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 export default () => {
-  const { data } = useMe();
-
   return (
-    <Tab.Navigator
+    <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: "black",
-          borderTopColor: "rgba(255,255,255,0.3)",
-        },
-        tabBarActiveTintColor: "white",
-        tabBarShowLabel: false,
+        presentation: "card",
+        //change to modal ,but modal deson't work safe area nouch
       }}
     >
-      <Tab.Screen
-        name="TabFeed"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIconCompo color={color} iconName={"home"} focused={focused} />
-          ),
-        }}
-      >
-        {() => <SharedStackNav screenName="Feed" />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="TabSearch"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIconCompo color={color} iconName={"search"} focused={focused} />
-          ),
-        }}
-      >
-        {() => <SharedStackNav screenName="Search" />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="TabCamera"
-        component={View}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIconCompo color={color} iconName={"camera"} focused={focused} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="TabNotification"
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIconCompo color={color} iconName={"heart"} focused={focused} />
-          ),
-        }}
-      >
-        {() => <SharedStackNav screenName="Notification" />}
-      </Tab.Screen>
-      <Tab.Screen
-        name="TabMe"
-        options={{
-          tabBarIcon: ({ color, focused }) =>
-            data?.me?.avatar ? (
-              <Image
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 15,
-                  ...(focused && { borderColor: "white", borderWidth: 1 }),
-                }}
-                source={{ uri: data.me.avatar }}
-              />
-            ) : (
-              <TabIconCompo
-                color={color}
-                iconName={"person"}
-                focused={focused}
-              />
-            ),
-        }}
-      >
-        {() => <SharedStackNav screenName="Me" />}
-      </Tab.Screen>
-    </Tab.Navigator>
+      <Stack.Screen name="Tabs" component={TabsNav} />
+      <Stack.Screen name="Upload" component={UploadNav} />
+    </Stack.Navigator>
   );
 };

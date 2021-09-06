@@ -75,3 +75,7 @@
 - Make a Fragment , using navigate params (https://reactnavigation.org/docs/route-prop/)
   -Flatlist etc..
   -Seperator
+
+# 10
+
+- Search input, react hooks useForm , lazyquery

@@ -91,10 +91,10 @@ const Photo = ({ id, user, file, isLiked, likes, caption }) => {
   });
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
-  const [iamgeHeight, setImageHeight] = useState(height - 500);
+  const [iamgeHeight, setImageHeight] = useState(height - 700);
   useEffect(() => {
     Image.getSize(file, (width, height) => {
-      setImageHeight(height > 2000 ? height / 5 : height / 3);
+      setImageHeight(height > 2000 ? height / 8 : height / 3);
     });
   }, [file]);
   const goToProfile = () => {
@@ -110,7 +110,7 @@ const Photo = ({ id, user, file, isLiked, likes, caption }) => {
         <Username>{user.userName}</Username>
       </Header>
       <File
-        resizeMode="cover"
+        resizeMode="contain"
         style={{
           width,
           height: iamgeHeight,
