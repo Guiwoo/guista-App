@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "@apollo/client";
 
 export const PHOTO_FRAGMENT = gql`
   fragment PhotoFragment on Photo {
@@ -31,4 +31,19 @@ export const USER_FRAGMENT = gql`
     isFollowing
     isMe
   }
+`;
+
+export const FEED_PHOTO = gql`
+  fragment FeedPhoto on Photo {
+    ...PhotoFragment
+    user {
+      id
+      userName
+      avatar
+    }
+    caption
+    createdAt
+    isMine
+  }
+  ${PHOTO_FRAGMENT}
 `;

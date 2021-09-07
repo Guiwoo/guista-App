@@ -56,7 +56,7 @@ export default ({ navigation }) => {
         style={{ width: "100%" }}
         data={data?.seeFeed}
         renderItem={renderPhoto}
-        keyExtractor={(photo) => photo.id.toString()}
+        keyExtractor={(photo) => photo.id.toString() + "`"}
       />
     </ScreenLayout>
   );

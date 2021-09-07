@@ -1,8 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabsNav from "./TabsNav";
-import Upload from "../screen/SelectPhoto";
 import UploadNav from "./UploadNav";
+import UploadForm from "../screen/UploadForm";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 export default () => {
@@ -16,6 +17,22 @@ export default () => {
     >
       <Stack.Screen name="Tabs" component={TabsNav} />
       <Stack.Screen name="Upload" component={UploadNav} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackImage: ({ tintColor }) => (
+            <Ionicons color={tintColor} name="close" size={28} />
+          ),
+          title: "Upload",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+          headerStyle: {
+            backgroundColor: "black",
+          },
+        }}
+        name="UploadForm"
+        component={UploadForm}
+      />
     </Stack.Navigator>
   );
 };

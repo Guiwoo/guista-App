@@ -4,6 +4,7 @@ import * as MediaLibrary from "expo-media-library";
 import { FlatList, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import useWindowDimensions from "react-native/Libraries/Utilities/useWindowDimensions";
+import { colors } from "../styles";
 
 const Container = styled.View`
   flex: 1;
@@ -25,8 +26,14 @@ const IconContainer = styled.View`
   bottom: 5px;
   right: 0px;
 `;
+const HeaderRightText = styled.Text`
+  color: ${colors.blue};
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: 7px;
+`;
 
-export default () => {
+export default ({ navigation }) => {
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState();
   const [takePhoto, setTakePhoto] = useState("");
@@ -40,7 +47,7 @@ export default () => {
       await MediaLibrary.getPermissionsAsync();
     if (accessPrivileges === "none" && canAskAgain) {
       const { accessPrivileges } = await MediaLibrary.requestPermissionsAsync();
-      if (accessPrivileges === "none") {
+      if (accessPrivileges !== "none") {
         setOk(true);
         getPhoto();
       }
@@ -49,12 +56,28 @@ export default () => {
       getPhoto();
     }
   };
-  useEffect(() => {
-    getPermission();
-  }, []);
   const choosePhoto = (uri) => {
     setTakePhoto(uri);
   };
+  const HeaderRight = () => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("UploadForm", {
+          file: takePhoto,
+        })
+      }
+    >
+      <HeaderRightText>Next</HeaderRightText>
+    </TouchableOpacity>
+  );
+  useEffect(() => {
+    getPermission();
+  }, []);
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: HeaderRight,
+    });
+  }, [takePhoto]);
   const NumberFour = 4;
   const { width } = useWindowDimensions();
   const renderPhoto = ({ item: photo }) => (
@@ -64,10 +87,27 @@ export default () => {
         style={{ width: width / NumberFour, height: 100 }}
       />
       <IconContainer>
-        <Ionicons name="checkmark-circle" size={18} color="white" />
+        <Ionicons
+          name="checkmark-circle"
+          size={18}
+          color={photo.uri === takePhoto ? colors.blue : "white"}
+        />
       </IconContainer>
     </ImageContainer>
   );
+  // const HeaderRight = () => {
+  //   return (
+  //     <TouchableOpacity
+  //       onPress={() =>
+  //         navigation.navigate("UploadForm", {
+  //           file: takePhoto,
+  //         })
+  //       }
+  //     >
+  //       <HeaderRightText>Next</HeaderRightText>
+  //     </TouchableOpacity>
+  //   );
+  // };
   return (
     <Container>
       <Top>
