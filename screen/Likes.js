@@ -4,6 +4,7 @@ import React from "react";
 import { FlatList, Text, View } from "react-native";
 import { useState } from "react/cjs/react.development";
 import ScreenLayout from "../components/ScreenLayout";
+import Seperator from "../components/Seperator";
 import UserRow from "../components/UserRow";
 import { USER_FRAGMENT } from "../fragments";
 
@@ -33,14 +34,7 @@ export default ({ route }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              height: 2,
-              backgroundColor: "rgba(255,255,255,0.2)",
-            }}
-          />
-        )}
+        ItemSeparatorComponent={() => <Seperator />}
         refreshing={refreshing}
         onRefresh={onRefresh}
         data={data?.seePhotoLikes}

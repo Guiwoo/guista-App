@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useEffect } from "react";
-import { FlatList, Text } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../styles";
 
@@ -15,6 +15,9 @@ const ME_QUERY = gql`
         file
         likes
       }
+      firstName
+      lastName
+      email
       bio
       avatar
       following {
@@ -110,6 +113,17 @@ const Image = styled.Image`
   margin-right: 10px;
 `;
 const Id = styled.View``;
+const ProfileView = styled.View`
+  margin-top: 20px;
+  padding: 0px 20px;
+`;
+const ProfileInnerText = styled.Text`
+  color: white;
+`;
+const ProfileBioText = styled.Text`
+  padding: 0px 10px;
+  color: yellow;
+`;
 
 export default ({ navigation }) => {
   const { data: result } = useQuery(ME_QUERY);
@@ -168,15 +182,39 @@ export default ({ navigation }) => {
         <TheText>Profile</TheText>
         <TheView />
       </Seperator>
+      <ProfileView>
+        <ProfileInnerText>
+          • FirstName :{" "}
+          {!result?.me?.firstname ? "Empty" : result?.me?.firstname}
+        </ProfileInnerText>
+        <ProfileInnerText>
+          • LastName : {!result?.me?.lastName ? "Empty" : result?.me?.lastName}
+        </ProfileInnerText>
+        <ProfileInnerText>• Email : {result?.me?.email}</ProfileInnerText>
+        <ProfileInnerText>• Bio</ProfileInnerText>
+        <View>
+          <ProfileBioText>- {result?.me?.bio}</ProfileBioText>
+        </View>
+      </ProfileView>
       <Seperator>
-        <TheText>Photo: {result?.me?.photos?.length}</TheText>
+        <TheText>Photos:</TheText>
+        <Text
+          style={{
+            fontSize: 18,
+            color: "rgba(255,255,255,0.7)",
+            fontWeight: "600",
+            marginRight: 10,
+          }}
+        >
+          {result?.me?.photos?.length}
+        </Text>
         <TheView />
       </Seperator>
       <FlatList
         horizontal={true}
         data={result?.me?.photos}
         renderItem={renderPhoto}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id.toString() + 1}
       />
     </Container>
   );
