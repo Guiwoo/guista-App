@@ -79,3 +79,5 @@
 # 10
 
 - Search input, react hooks useForm , lazyquery
+
+# Need to refectoring on Profile sections

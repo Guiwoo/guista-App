@@ -5,6 +5,7 @@ import Photo from "../components/Photo";
 import ScreenLayout from "../components/ScreenLayout";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
 import { Ionicons } from "@expo/vector-icons";
+import Seperator from "../components/Seperator";
 
 const FEED_QUERY = gql`
   query seeFeed($offSet: Int!) {
@@ -58,6 +59,7 @@ export default ({ navigation }) => {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
+        ItemSeparatorComponent={() => <Seperator />}
         onEndReachedThreshold={0.1}
         onEndReached={() =>
           fetchMore({
@@ -72,7 +74,7 @@ export default ({ navigation }) => {
         style={{ width: "100%" }}
         data={data?.seeFeed}
         renderItem={renderPhoto}
-        keyExtractor={(photo) => photo.id.toString() + ``}
+        keyExtractor={(photo) => "" + photo.id}
       />
     </ScreenLayout>
   );
