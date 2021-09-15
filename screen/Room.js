@@ -1,12 +1,27 @@
-import { useMutation, useQuery } from "@apollo/client";
+import {
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import gql from "graphql-tag";
 import React, { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import ScreenLayOut from "../components/ScreenLayout";
 import styled from "styled-components/native";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import useMe from "../hooks/useMe";
 import { Ionicons } from "@expo/vector-icons";
+import { MESSAGE_FRAGMENT } from "../fragments";
+
+const ROOM_UPDATE = gql`
+  subscription roomUpdate($id: Int!) {
+    roomUpdate(id: $id) {
+      ...MessageParts
+    }
+  }
+  ${MESSAGE_FRAGMENT}
+`;
 
 const SEND_MESSAGE_MUTATION = gql`
   mutation sendMessage($payload: String!, $roomId: Int, $userId: Int) {
@@ -22,16 +37,11 @@ const ROOM_QUERY = gql`
     seeRoom(id: $id) {
       id
       message {
-        id
-        payload
-        user {
-          userName
-          avatar
-        }
-        read
+        ...MessageParts
       }
     }
   }
+  ${MESSAGE_FRAGMENT}
 `;
 const MessageContainer = styled.View`
   padding: 0px 10px;
@@ -80,7 +90,6 @@ export default ({ route, navigation }) => {
         sendMessage: { ok, id },
       },
     } = result;
-    console.log(id, "id");
     if (ok && meData) {
       const { message } = getValues();
       setValue("message", "");
@@ -112,13 +121,11 @@ export default ({ route, navigation }) => {
         id: `Room:${route.params.id}`,
         fields: {
           message(prev) {
-            console.log(prev, "⭐️");
             return [...prev, messageFragment];
           },
         },
       });
     }
-    console.log("💚", cache);
   };
   const [sendMessageMutation, { loading: sendingMessage }] = useMutation(
     SEND_MESSAGE_MUTATION,
@@ -126,7 +133,7 @@ export default ({ route, navigation }) => {
       update: updateSendMessage,
     }
   );
-  const { data, loading } = useQuery(ROOM_QUERY, {
+  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
     variables: {
       id: route?.params?.id,
     },
@@ -141,7 +148,56 @@ export default ({ route, navigation }) => {
       });
     }
   };
+  const client = useApolloClient();
+  const updateQuery = (prevQueyry, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdate: messageUp },
+      },
+    } = options;
+    if (messageUp.id) {
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              userName
+              avatar
+            }
+            read
+          }
+        `,
+        data: messageUp,
+      });
+      client.cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          message(prev) {
+            const existMessage = prev.find(
+              (aMessage) => aMessage.__ref === messageFragment.__ref
+            );
+            if (existMessage) {
+              return prev;
+            }
+            return [...prev, messageFragment];
+          },
+        },
+      });
+    }
+  };
 
+  useEffect(() => {
+    if (data?.seeRoom) {
+      subscribeToMore({
+        document: ROOM_UPDATE,
+        variables: {
+          id: route?.params?.id,
+        },
+        updateQuery,
+      });
+    }
+  }, [data]);
   useEffect(() => {
     navigation.setOptions({
       title: `Chat with ${route?.params?.talkingTo?.userName}`,
