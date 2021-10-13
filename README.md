@@ -81,3 +81,7 @@
 - Search input, react hooks useForm , lazyquery
 
 # Need to refectoring on Profile sections
+
+# Notification
+
+# fix the camera interface

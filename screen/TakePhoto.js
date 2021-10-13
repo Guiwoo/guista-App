@@ -10,75 +10,103 @@ import { useIsFocused } from "@react-navigation/core";
 
 const Container = styled.View`
   flex: 1;
-  background-color: black;
+  background-color: #2c2c2c;
 `;
-
 const Actions = styled.View`
-  flex: 0.3;
-  padding: 0px 50px;
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: row;
+  position: absolute;
+  bottom: 40px;
+  right: 130px;
 `;
-const TakePhotoBtn = styled.TouchableOpacity`
-  width: 100px;
-  height: 100px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
+const Shot = styled.TouchableOpacity`
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
   border: 2px solid white;
 `;
-const SliderContainer = styled.View``;
-const ButtonsContainer = styled.View`
-  justify-content: space-between;
+const SwapCameraButton = styled.TouchableOpacity`
+  justify-content: center;
   align-items: center;
-  flex-direction: row;
-  width: 100%;
+  margin-left: 10px;
 `;
-const ActionsContainer = styled.View`
-  flex-direction: row;
-`;
-const CloseBtn = styled.TouchableOpacity`
+const ZoomButton = styled.TouchableOpacity`
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  border: 2px solid white;
   position: absolute;
-  top: 20px;
-  left: 20px;
+  bottom: 100px;
+  right: 183px;
 `;
-const PhotoActions = styled(Actions)`
-  flex-direction: row;
-`;
-const PhotoAction = styled.TouchableOpacity`
-  background-color: white;
-  padding: 10px 25px;
-  border-radius: 4px;
-`;
-const PhotoActionText = styled.Text`
+const ZoomText = styled.Text`
+  font-size: 12px;
   font-weight: 600;
+  color: white;
+`;
+const FlashBtn = styled.TouchableOpacity`
+  margin-right: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+const AfterPhotoContainer = styled.View`
+  flex: 1;
+`;
+const NewContainer = styled.View`
+  flex: 0.09;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+const AfterPhoto = styled.TouchableOpacity`
+  width: 60px;
+  flex-direction: row;
+  justify-content: center;
+  padding: 10px;
+  margin-right: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  border: 1px solid white;
+`;
+const AfterPhotoText = styled.Text`
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
 `;
 
 export default ({ navigation }) => {
   const camera = useRef();
-  const [cameraReady, setCameraReady] = useState(false);
   const [takenPhoto, setTakenPhoto] = useState("");
+  const [cameraReady, setCameraReady] = useState(false);
   const [ok, setOk] = useState(false);
   const [zoom, setZoom] = useState(0);
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const getPermissions = async () => {
-    const { granted } = await Camera.requestPermissionsAsync();
+    const { granted } = await Camera.requestCameraPermissionsAsync();
     setOk(granted);
   };
-  useEffect(() => {
-    getPermissions();
-  }, []);
-  const onCameraSwitch = () => {
-    if (cameraType === Camera.Constants.Type.back) {
-      setCameraType(Camera.Constants.Type.front);
+  const onZoomSwitch = () => {
+    if (zoom === 0) {
+      setZoom(0.5);
+    } else if (zoom === 0.5) {
+      setZoom(1);
     } else {
-      setCameraType(Camera.Constants.Type.back);
+      setZoom(0);
     }
   };
-  const onZoomValueChange = (e) => {
-    setZoom(e);
+  const onCameraSwitch = () => {
+    if (cameraType === Camera.Constants.Type.front) {
+      setCameraType(Camera.Constants.Type.back);
+    } else {
+      setCameraType(Camera.Constants.Type.front);
+    }
   };
-  const onFlashChange = () => {
+  const onFlashSwitch = () => {
     if (flashMode === Camera.Constants.FlashMode.off) {
       setFlashMode(Camera.Constants.FlashMode.on);
     } else if (flashMode === Camera.Constants.FlashMode.on) {
@@ -87,7 +115,6 @@ export default ({ navigation }) => {
       setFlashMode(Camera.Constants.FlashMode.off);
     }
   };
-  const onCameraReady = () => setCameraReady(true);
   const takePhoto = async () => {
     if (camera.current && cameraReady) {
       const { uri } = await camera.current.takePictureAsync({
@@ -95,20 +122,19 @@ export default ({ navigation }) => {
         exif: true,
       });
       setTakenPhoto(uri);
-      // const asset = await MediaLibrary.createAssetAsync(uri);
     }
+  };
+  const onCameraReady = () => {
+    setCameraReady(true);
   };
   const goToUpload = async (save) => {
     if (save) {
-      await MediaLibrary.saveToLibraryAsync(takenPhoto);
+      await MediaLibrary.createAssetAsync(takenPhoto);
     }
-    navigation.navigate("UploadForm", {
-      file: takenPhoto,
-    });
+    navigation.navigate("UploadCoffee", { file: takenPhoto });
   };
-  const onDismiss = () => setTakenPhoto("");
-  const onUpload = () => {
-    Alert.alert("Save Photo?", "Save Photo & Upload or Just Upload ?", [
+  const onALret = () => {
+    Alert.alert("Save Photo", "Save Photo & Upload or Just Upload", [
       {
         text: "Save & Upload",
         onPress: () => goToUpload(true),
@@ -119,81 +145,63 @@ export default ({ navigation }) => {
       },
     ]);
   };
-  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    getPermissions();
+  }, []);
+  const onDissmiss = () => setTakenPhoto("");
   return (
     <Container>
-      {isFocused ? <StatusBar hidden={true} /> : null}
-      {isFocused ? (
-        takenPhoto === "" ? (
-          <Camera
-            type={cameraType}
-            pictureSize="4:3"
-            style={{ flex: 1 }}
-            zoom={zoom}
-            flashMode={flashMode}
-            ref={camera}
-            onCameraReady={onCameraReady}
-          >
-            <CloseBtn onPress={() => navigation.navigate("Tabs")}>
-              <Ionicons name="close" color="white" size={26} />
-            </CloseBtn>
-          </Camera>
-        ) : (
-          <Image style={{ flex: 1 }} source={{ uri: takenPhoto }} />
-        )
-      ) : null}
       {takenPhoto === "" ? (
-        <Actions>
-          <SliderContainer>
-            <Slider
-              style={{ width: 200, height: 40 }}
-              minimumValue={0}
-              maximumValue={1}
-              minimumTrackTintColor="#FFFFFF"
-              maximumTrackTintColor="rgba(255,255,255,0.5)"
-              onValueChange={onZoomValueChange}
-            />
-          </SliderContainer>
-          <ButtonsContainer>
-            <TakePhotoBtn onPress={takePhoto} />
-            <ActionsContainer>
-              <TouchableOpacity
-                onPress={onFlashChange}
-                style={{ marginRight: 30 }}
-              >
-                <Ionicons
-                  size={30}
-                  color="white"
-                  name={
-                    flashMode === Camera.Constants.FlashMode.off
-                      ? "flash-off"
-                      : flashMode === Camera.Constants.FlashMode.on
-                      ? "flash"
-                      : flashMode === Camera.Constants.FlashMode.auto
-                      ? "eye"
-                      : ""
-                  }
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={onCameraSwitch}>
-                <Ionicons
-                  size={30}
-                  color={"white"}
-                  name={"md-camera-reverse-outline"}
-                />
-              </TouchableOpacity>
-            </ActionsContainer>
-          </ButtonsContainer>
-        </Actions>
+        <Camera
+          type={cameraType}
+          style={{ flex: 1 }}
+          zoom={zoom}
+          flashMode={flashMode}
+          ref={camera}
+          onCameraReady={onCameraReady}
+        >
+          <ZoomButton onPress={onZoomSwitch}>
+            <ZoomText>x{zoom}</ZoomText>
+          </ZoomButton>
+          <Actions>
+            <FlashBtn onPress={onFlashSwitch}>
+              <Ionicons
+                size={30}
+                color={"white"}
+                name={
+                  flashMode === Camera.Constants.FlashMode.off
+                    ? "flash-off"
+                    : flashMode === Camera.Constants.FlashMode.on
+                    ? "flash"
+                    : flashMode === Camera.Constants.FlashMode.auto
+                    ? "eye"
+                    : ""
+                }
+              />
+            </FlashBtn>
+            <Shot onPress={takePhoto} />
+            <SwapCameraButton onPress={onCameraSwitch}>
+              <Ionicons
+                name="camera-reverse-outline"
+                size={30}
+                color={"white"}
+              />
+            </SwapCameraButton>
+          </Actions>
+        </Camera>
       ) : (
-        <PhotoActions>
-          <PhotoAction onPress={onDismiss}>
-            <PhotoActionText>Dismiss</PhotoActionText>
-          </PhotoAction>
-          <PhotoAction onPress={onUpload}>
-            <PhotoActionText>Upload</PhotoActionText>
-          </PhotoAction>
-        </PhotoActions>
+        <AfterPhotoContainer>
+          <Image source={{ uri: takenPhoto }} style={{ flex: 1 }} />
+          <NewContainer>
+            <AfterPhoto onPress={onDissmiss}>
+              <AfterPhotoText>Retake</AfterPhotoText>
+            </AfterPhoto>
+            <AfterPhoto onPress={onALret}>
+              <AfterPhotoText>Use</AfterPhotoText>
+            </AfterPhoto>
+          </NewContainer>
+        </AfterPhotoContainer>
       )}
     </Container>
   );
