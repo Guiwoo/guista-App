@@ -35,6 +35,7 @@ export default ({ navigation }) => {
       offSet: 0,
     },
   });
+  console.log(data);
   const refreshing = async () => {
     setRefresh(true);
     await refetch();
@@ -45,9 +46,9 @@ export default ({ navigation }) => {
     <TouchableOpacity onPress={() => navigation.navigate("Messages")}>
       <Ionicons
         name="paper-plane"
-        color="white"
-        size={24}
-        style={{ marginRight: 5 }}
+        color="yellow"
+        size={20}
+        style={{ marginRight: 15, paddingRight: 25 }}
       />
     </TouchableOpacity>
   );

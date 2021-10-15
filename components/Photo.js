@@ -58,7 +58,16 @@ const TOGGLE_LIKE_MUTATION = gql`
   }
 `;
 
-const Photo = ({ id, user, file, isLiked, likes, caption }) => {
+const Photo = ({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  comments,
+  commentNumber,
+}) => {
   const updateToggleLike = (cache, result) => {
     const {
       data: {
@@ -125,7 +134,13 @@ const Photo = ({ id, user, file, isLiked, likes, caption }) => {
             size={22}
           />
         </Action>
-        <Action onPress={() => navigation.navigate("Comments")}>
+        <Action
+          onPress={() =>
+            navigation.navigate("Comments", {
+              comments,
+            })
+          }
+        >
           <Ionicons name="chatbubble-outline" color="white" size={22} />
         </Action>
       </Actions>

@@ -12,7 +12,7 @@ export default () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        presentation: "card",
+        presentation: "modal",
         //change to modal ,but modal deson't work safe area nouch
       }}
     >
