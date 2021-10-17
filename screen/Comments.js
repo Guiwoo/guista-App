@@ -1,6 +1,9 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { useState } from "react";
+import { FlatList, View } from "react-native";
 import styled from "styled-components/native";
+import CommnetBox from "../components/comments/CommentsBox";
+import Seperator from "../components/Seperator";
 
 const Container = styled.View`
   background-color: black;
@@ -9,6 +12,7 @@ const Container = styled.View`
 
 const CommentsBox = styled.View`
   flex: 8;
+  margin-top: 10px;
 `;
 
 const InputBox = styled.View`
@@ -21,20 +25,23 @@ const TestText = styled.Text`
 export default ({ route }) => {
   const { comments } = route.params;
   const renderComments = (comment) => {
-    console.log(comment);
-    return (
-      <View>
-        <TestText>{comment.payload}</TestText>
-      </View>
-    );
+    return <CommnetBox data={comment} />;
+  };
+  const [refresh, setRefresh] = useState(false);
+  const refreshing = () => {
+    setRefresh(true);
+    setRefresh(false);
   };
   return (
     <Container>
       <CommentsBox>
         <FlatList
+          refreshing={refresh}
+          onRefresh={refreshing}
           renderItem={renderComments}
           data={comments}
-          keyExtractor={(comment) => comment.id}
+          keyExtractor={(comment) => comment.id + ""}
+          ItemSeparatorComponent={() => <Seperator />}
         />
       </CommentsBox>
       <InputBox></InputBox>
